@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animación de Corazón Creciente</title>
+    <style>
+        /* Configuración de la página para centrar todo */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Altura completa de la ventana */
+            display: flex;
+            justify-content: center; /* Centrado horizontal */
+            align-items: center;     /* Centrado vertical */
+            background-color: #1a1a1a; /* Fondo oscuro para resaltar */
+            overflow: hidden; /* Evita barras de desplazamiento si crece mucho */
+        }
+
+        /* El contenedor del corazón */
+        .heart {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            background-color: #ff4757; /* Color rojo del corazón */
+            
+            /* La animación: nombre | duración | curva de velocidad | infinito */
+            animation: crecer 3s ease-in-out infinite; 
+            
+            /* Sombra para darle un efecto de brillo */
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.8); 
+        }
+
+        /* Pseudo-elementos para crear las partes redondas del corazón */
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ff4757;
+            border-radius: 50%; /* Hace que sean círculos */
+        }
+
+        /* Posicionamos el círculo de arriba */
+        .heart::before {
+            top: -25px;
+            left: 0;
+        }
+
+        /* Posicionamos el círculo de la derecha */
+        .heart::after {
+            top: 0;
+            left: 25px;
+        }
+
+        /* DEFINICIÓN DE LA ANIMACIÓN */
+        @keyframes crecer {
+            0% {
+                /* Empieza invisible y rotado -45 grados (posición estándar del corazón CSS) */
+                transform: scale(0) rotate(-45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1; /* Aparece rápidamente */
+            }
+            100% {
+                /* Termina 5 veces más grande */
+                transform: scale(5) rotate(-45deg);
+                opacity: 0; /* Se desvanece al final */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="heart"></div>
+
+</body>
+</html>
