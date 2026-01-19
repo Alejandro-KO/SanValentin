@@ -8,7 +8,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
 
         body {
-            background-color: #1a1a2e; /* Fondo oscuro elegante */
+            /* Un fondo oscuro suave (Gris Oscuro Azulado) - Muy elegante */
+            background-color: #1a1a2e;
             color: #e0e0e0;
             display: flex;
             flex-direction: column;
@@ -21,20 +22,23 @@
             text-align: center;
         }
 
+        /* El contenedor del texto */
         .message-container {
             max-width: 600px;
-            min-height: 200px;
+            min-height: 200px; /* Evita que el texto salte */
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
+        /* Estilo del texto */
         #typing-text {
             font-size: 1.8rem;
             line-height: 1.6;
             font-weight: 300;
         }
 
+        /* La barrita parpadeante del cursor */
         .cursor {
             display: inline-block;
             width: 3px;
@@ -42,14 +46,15 @@
             background-color: #fff;
             margin-left: 5px;
             animation: blink 1s infinite;
-            vertical-align: middle; /* Alineación correcta */
         }
 
+        /* Animación de la barrita */
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
 
+        /* Pequeño detalle visual decorativo (una línea sutil) */
         .decoration-line {
             width: 0;
             height: 2px;
@@ -58,6 +63,7 @@
             transition: width 2s ease;
         }
 
+        /* Para celulares */
         @media (max-width: 600px) {
             #typing-text { font-size: 1.4rem; }
             .cursor { height: 1.4rem; }
@@ -67,59 +73,88 @@
 <body>
 
     <div class="message-container">
-        <div id="typing-text"><span class="cursor"></span></div>
+        <div id="typing-text"></div>
         <div class="decoration-line" id="line"></div>
     </div>
 
     <script>
-        // --- TU MENSAJE AQUÍ ---
-        // ^1000 = Pausa de 1 segundo (NO APARECERÁ EN PANTALLA)
-        // <br> = Salto de línea
-        const mensajeFuente = "Hola... ^1000 <br><br> Solo pasaba por aquí para decirte que... ^800 <br> me gusta mucho cuando sonríes. ^1000 <br><br> Que tengas un lindo día. ☺️✨";
+        // --- AQUÍ EDITAS TU MENSAJE ---
+        // Puedes poner saltos de línea con <br>
+        // El símbolo ^1000 significa "espera 1 segundo aquí" (pausa dramática)
+        const mensajeCompleto = "Hola... ^1000 <br><br> Solo pasaba por aquí para decirte que... ^800 <br> me gusta mucho cuando sonríes. ^1000 <br><br> Que tengas un día bonito. ✨";
 
         const textElement = document.getElementById('typing-text');
         const lineElement = document.getElementById('line');
         
-        // Variables de control
-        let i = 0; // Índice de la letra actual en el mensaje fuente
-        let textoMostrado = ""; // Aquí acumulamos SOLO lo que se debe ver
+        let i = 0;
+        let isTag = false; // Para detectar si estamos escribiendo HTML como <br>
+        let waitTime = 0;
 
         function typeWriter() {
-            if (i < mensajeFuente.length) {
-                let char = mensajeFuente.charAt(i);
+            // Si hay un tiempo de espera pendiente, lo respetamos
+            if (waitTime > 0) {
+                setTimeout(() => {
+                    waitTime = 0;
+                    typeWriter();
+                }, waitTime);
+                return;
+            }
 
-                // 1. DETECTOR DE PAUSAS (^)
+            if (i < mensajeCompleto.length) {
+                let char = mensajeCompleto.charAt(i);
+
+                // Detectar comando de pausa (^)
                 if (char === '^') {
-                    // Encontramos una pausa. Leemos el número que sigue.
+                    // Extraer el número de milisegundos
                     let numberString = "";
-                    i++; // Saltamos el ^
-                    while (i < mensajeFuente.length && !isNaN(mensajeFuente.charAt(i)) && mensajeFuente.charAt(i) !== ' ') {
-                        numberString += mensajeFuente.charAt(i);
+                    i++;
+                    while (i < mensajeCompleto.length && !isNaN(mensajeCompleto.charAt(i))) {
+                        numberString += mensajeCompleto.charAt(i);
                         i++;
                     }
-                    
-                    // Convertimos el texto a número (ej: "1000" -> 1000)
-                    let waitTime = parseInt(numberString);
-                    
-                    // Pausamos y luego volvemos a llamar a la función
-                    setTimeout(typeWriter, waitTime);
-                    return; // Salimos de la función para esperar
+                    waitTime = parseInt(numberString);
+                    typeWriter(); // Llamada recursiva para procesar la pausa
+                    return;
                 }
 
-                // 2. DETECTOR DE HTML (<br>, etc)
-                if (char === '<') {
-                    // Si es una etiqueta, la añadimos completa de golpe al texto mostrado
-                    let tag = "";
-                    while (mensajeFuente.charAt(i) !== '>') {
-                        tag += mensajeFuente.charAt(i);
-                        i++;
-                    }
-                    tag += '>'; // Añadimos el cierre '>'
-                    i++; // Pasamos al siguiente
-                    
-                    textoMostrado += tag;
-                    textElement.innerHTML = textoMostrado + '<span class="cursor"></span>';
-                    
-                    // Las etiquetas no tienen delay, seguimos inmediato
-                    typeWriter
-                    
+                // Detectar etiquetas HTML para no escribirlas letra por letra
+                if (char === '<') isTag = true;
+                
+                if (char === '>') {
+                    isTag = false;
+                    textElement.innerHTML = mensajeCompleto.substring(0, i + 1) + '<span class="cursor"></span>';
+                    i++;
+                    typeWriter();
+                    return;
+                }
+
+                if (isTag) {
+                    i++;
+                    typeWriter(); // Saltar al siguiente sin delay si es etiqueta
+                    return;
+                }
+
+                // Escribir el caracter normal
+                textElement.innerHTML = mensajeCompleto.substring(0, i + 1) + '<span class="cursor"></span>';
+                i++;
+
+                // Velocidad aleatoria para parecer humano (entre 50ms y 150ms)
+                let speed = Math.random() * (100 - 50) + 50; 
+                setTimeout(typeWriter, speed);
+
+            } else {
+                // Cuando termina de escribir
+                // 1. Quitar el cursor parpadeante (opcional, aquí lo dejo para que se vea vivo)
+                // 2. Extender la línea decorativa
+                lineElement.style.width = "100%";
+            }
+        }
+
+        // Iniciar al cargar la página (con un pequeño retraso inicial)
+        window.onload = () => {
+            setTimeout(typeWriter, 1000);
+        };
+    </script>
+
+</body>
+</html>
