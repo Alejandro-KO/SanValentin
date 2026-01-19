@@ -3,169 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para mi amigo</title>
+    <title>Un mensaje para ti</title>
     <style>
-        /* --- ESTILOS GENERALES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
+
         body {
-            background-color: #050505; /* Fondo negro */
+            /* Un fondo oscuro suave (Gris Oscuro Azulado) - Muy elegante */
+            background-color: #1a1a2e;
+            color: #e0e0e0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden; /* Evita barras de desplazamiento */
-        }
-
-        /* --- PANTALLA DE INICIO (OVERLAY) --- */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            cursor: pointer;
-            transition: opacity 0.5s ease;
-        }
-
-        #overlay span {
-            color: #fff;
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            border: 2px solid #ff0000;
+            font-family: 'Montserrat', sans-serif;
             padding: 20px;
-            box-shadow: 0 0 15px #ff0000;
-            animation: pulsar 1s infinite;
             text-align: center;
         }
 
-        /* --- TEXTO NEÓN ROJO --- */
-        .neon-text {
-            color: #fff;
-            font-size: 4rem;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 20px;
-            /* Efecto Neón Rojo */
-            text-shadow: 
-                0 0 7px #fff,
-                0 0 10px #fff,
-                0 0 21px #fff,
-                0 0 42px #ff0000,
-                0 0 82px #ff0000,
-                0 0 92px #ff0000,
-                0 0 102px #ff0000,
-                0 0 151px #ff0000;
-            animation: parpadeo 1.5s infinite alternate;
-        }
-
-        /* --- ANIMACIÓN DE PUÑOS (FIST BUMP) --- */
-        .fist-bump-container {
-            position: relative;
+        /* El contenedor del texto */
+        .message-container {
+            max-width: 600px;
+            min-height: 200px; /* Evita que el texto salte */
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            margin-top: 20px;
         }
 
-        .fist {
-            font-size: 8rem; /* Tamaño de los emojis */
-            position: relative;
-            user-select: none; /* Evita que se seleccione como texto */
+        /* Estilo del texto */
+        #typing-text {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            font-weight: 300;
         }
 
-        .bump-effect {
-            font-size: 6rem;
-            position: absolute;
-            opacity: 0;
-            animation: explosion 1s ease-in-out infinite;
-            z-index: 10;
-            pointer-events: none;
+        /* La barrita parpadeante del cursor */
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.8rem;
+            background-color: #fff;
+            margin-left: 5px;
+            animation: blink 1s infinite;
         }
 
-        /* Animaciones */
-        .left { animation: golpe-izq 1s ease-in-out infinite; }
-        .right { animation: golpe-der 1s ease-in-out infinite; }
-
-        @keyframes golpe-izq {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(20px); }
+        /* Animación de la barrita */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
-        @keyframes golpe-der {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(-20px); }
+        /* Pequeño detalle visual decorativo (una línea sutil) */
+        .decoration-line {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff4b5c, transparent);
+            margin-top: 30px;
+            transition: width 2s ease;
         }
 
-        @keyframes explosion {
-            0%, 45% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1.5); }
-            100% { opacity: 0; transform: scale(2); }
-        }
-
-        @keyframes parpadeo {
-            0% { opacity: 1; text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 42px #ff0000; }
-            50% { opacity: 0.8; text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 20px #ff0000; }
-            100% { opacity: 1; text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 42px #ff0000; }
-        }
-
-        @keyframes pulsar {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Ajuste para celulares */
+        /* Para celulares */
         @media (max-width: 600px) {
-            .neon-text { font-size: 2.5rem; }
-            .fist { font-size: 5rem; }
+            #typing-text { font-size: 1.4rem; }
+            .cursor { height: 1.4rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="overlay">
-        <span>Haz clic para iniciar<br>🤜💥🤛</span>
-    </div>
-
-    <audio id="musica" loop>
-        <source src="musica.mp3" type="audio/mpeg">
-        Tu navegador no soporta audio.
-    </audio>
-
-    <div class="container">
-        <h1 class="neon-text">ERES EL MEJOR</h1>
-        
-        <div class="fist-bump-container">
-            <div class="fist left">🤜</div>
-            <div class="bump-effect">💥</div>
-            <div class="fist right">🤛</div>
-        </div>
+    <div class="message-container">
+        <div id="typing-text"></div>
+        <div class="decoration-line" id="line"></div>
     </div>
 
     <script>
-        const overlay = document.getElementById('overlay');
-        const audio = document.getElementById('musica');
+        // --- AQUÍ EDITAS TU MENSAJE ---
+        // Puedes poner saltos de línea con <br>
+        // El símbolo ^1000 significa "espera 1 segundo aquí" (pausa dramática)
+        const mensajeCompleto = "Hola... ^1000 <br><br> Solo pasaba por aquí para decirte que... ^800 <br> me gusta mucho cuando sonríes. ^1000 <br><br> Que tengas un día bonito. ✨";
 
-        overlay.addEventListener('click', () => {
-            // Reproducir música
-            audio.volume = 0.5; // Volumen al 50%
-            audio.play().catch(error => {
-                console.log("No se encontró el audio o hubo un error:", error);
-            });
+        const textElement = document.getElementById('typing-text');
+        const lineElement = document.getElementById('line');
+        
+        let i = 0;
+        let isTag = false; // Para detectar si estamos escribiendo HTML como <br>
+        let waitTime = 0;
 
-            // Ocultar pantalla de inicio
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 500);
-        });
+        function typeWriter() {
+            // Si hay un tiempo de espera pendiente, lo respetamos
+            if (waitTime > 0) {
+                setTimeout(() => {
+                    waitTime = 0;
+                    typeWriter();
+                }, waitTime);
+                return;
+            }
+
+            if (i < mensajeCompleto.length) {
+                let char = mensajeCompleto.charAt(i);
+
+                // Detectar comando de pausa (^)
+                if (char === '^') {
+                    // Extraer el número de milisegundos
+                    let numberString = "";
+                    i++;
+                    while (i < mensajeCompleto.length && !isNaN(mensajeCompleto.charAt(i))) {
+                        numberString += mensajeCompleto.charAt(i);
+                        i++;
+                    }
+                    waitTime = parseInt(numberString);
+                    typeWriter(); // Llamada recursiva para procesar la pausa
+                    return;
+                }
+
+                // Detectar etiquetas HTML para no escribirlas letra por letra
+                if (char === '<') isTag = true;
+                
+                if (char === '>') {
+                    isTag = false;
+                    textElement.innerHTML = mensajeCompleto.substring(0, i + 1) + '<span class="cursor"></span>';
+                    i++;
+                    typeWriter();
+                    return;
+                }
+
+                if (isTag) {
+                    i++;
+                    typeWriter(); // Saltar al siguiente sin delay si es etiqueta
+                    return;
+                }
+
+                // Escribir el caracter normal
+                textElement.innerHTML = mensajeCompleto.substring(0, i + 1) + '<span class="cursor"></span>';
+                i++;
+
+                // Velocidad aleatoria para parecer humano (entre 50ms y 150ms)
+                let speed = Math.random() * (100 - 50) + 50; 
+                setTimeout(typeWriter, speed);
+
+            } else {
+                // Cuando termina de escribir
+                // 1. Quitar el cursor parpadeante (opcional, aquí lo dejo para que se vea vivo)
+                // 2. Extender la línea decorativa
+                lineElement.style.width = "100%";
+            }
+        }
+
+        // Iniciar al cargar la página (con un pequeño retraso inicial)
+        window.onload = () => {
+            setTimeout(typeWriter, 1000);
+        };
     </script>
 
 </body>
