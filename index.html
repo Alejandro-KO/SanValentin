@@ -78,83 +78,66 @@
     </div>
 
     <script>
-        // --- AQUÍ EDITAS TU MENSAJE ---
-        // Puedes poner saltos de línea con <br>
-        // El símbolo ^1000 significa "espera 1 segundo aquí" (pausa dramática)
-        const mensajeCompleto = "Hola... ^1000 <br><br> Solo pasaba por aquí para decirte que... ^800 <br> me gusta mucho cuando sonríes. ^1000 <br><br> Que tengas un lindo día. ☺️✨";
+    const mensajeCompleto =
+        "Hola... ^1000 <br><br> Solo pasaba por aquí para decirte que... ^800 <br> me gusta mucho cuando sonríes. ^1000 <br><br> Que tengas un lindo día. ☺️✨";
 
-        const textElement = document.getElementById('typing-text');
-        const lineElement = document.getElementById('line');
-        
-        let i = 0;
-        let isTag = false; // Para detectar si estamos escribiendo HTML como <br>
-        let waitTime = 0;
+    const textElement = document.getElementById('typing-text');
+    const lineElement = document.getElementById('line');
 
-        function typeWriter() {
-            // Si hay un tiempo de espera pendiente, lo respetamos
-            if (waitTime > 0) {
-                setTimeout(() => {
-                    waitTime = 0;
-                    typeWriter();
-                }, waitTime);
+    let i = 0;
+    let textoVisible = "";
+    let isTag = false;
+    let waitTime = 0;
+
+    function typeWriter() {
+
+        if (waitTime > 0) {
+            setTimeout(() => {
+                waitTime = 0;
+                typeWriter();
+            }, waitTime);
+            return;
+        }
+
+        if (i < mensajeCompleto.length) {
+            let char = mensajeCompleto.charAt(i);
+
+            // 🛑 Pausas tipo ^1000
+            if (char === '^') {
+                let numberString = "";
+                i++;
+                while (i < mensajeCompleto.length && !isNaN(mensajeCompleto.charAt(i))) {
+                    numberString += mensajeCompleto.charAt(i);
+                    i++;
+                }
+                waitTime = parseInt(numberString);
+                typeWriter();
                 return;
             }
 
-            if (i < mensajeCompleto.length) {
-                let char = mensajeCompleto.charAt(i);
+            // 🧠 Detectar etiquetas HTML
+            if (char === '<') isTag = true;
 
-                // Detectar comando de pausa (^)
-                if (char === '^') {
-                    // Extraer el número de milisegundos
-                    let numberString = "";
-                    i++;
-                    while (i < mensajeCompleto.length && !isNaN(mensajeCompleto.charAt(i))) {
-                        numberString += mensajeCompleto.charAt(i);
-                        i++;
-                    }
-                    waitTime = parseInt(numberString);
-                    typeWriter(); // Llamada recursiva para procesar la pausa
-                    return;
-                }
+            textoVisible += char;
 
-                // Detectar etiquetas HTML para no escribirlas letra por letra
-                if (char === '<') isTag = true;
-                
-                if (char === '>') {
-                    isTag = false;
-                    textElement.innerHTML = mensajeCompleto.substring(0, i + 1) + '<span class="cursor"></span>';
-                    i++;
-                    typeWriter();
-                    return;
-                }
+            if (char === '>') isTag = false;
 
-                if (isTag) {
-                    i++;
-                    typeWriter(); // Saltar al siguiente sin delay si es etiqueta
-                    return;
-                }
+            textElement.innerHTML = textoVisible + '<span class="cursor"></span>';
+            i++;
 
-                // Escribir el caracter normal
-                textElement.innerHTML = mensajeCompleto.substring(0, i + 1) + '<span class="cursor"></span>';
-                i++;
+            let speed = isTag ? 0 : Math.random() * (120 - 50) + 50;
+            setTimeout(typeWriter, speed);
 
-                // Velocidad aleatoria para parecer humano (entre 50ms y 150ms)
-                let speed = Math.random() * (100 - 50) + 50; 
-                setTimeout(typeWriter, speed);
-
-            } else {
-                // Cuando termina de escribir
-                // 1. Quitar el cursor parpadeante (opcional, aquí lo dejo para que se vea vivo)
-                // 2. Extender la línea decorativa
-                lineElement.style.width = "100%";
-            }
+        } else {
+            lineElement.style.width = "100%";
         }
+    }
 
-        // Iniciar al cargar la página (con un pequeño retraso inicial)
-        window.onload = () => {
-            setTimeout(typeWriter, 1000);
-        };
-    </script>
+    window.onload = () => {
+        setTimeout(typeWriter, 1000);
+    };
+</script>
 
 </body>
 </html>
+
