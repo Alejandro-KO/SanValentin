@@ -3,78 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animación de Corazón Creciente</title>
+    <title>Para mi amigo</title>
     <style>
-        /* Configuración de la página para centrar todo */
+        /* --- ESTILOS GENERALES --- */
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh; /* Altura completa de la ventana */
+            background-color: #050505; /* Fondo negro */
             display: flex;
-            justify-content: center; /* Centrado horizontal */
-            align-items: center;     /* Centrado vertical */
-            background-color: #1a1a1a; /* Fondo oscuro para resaltar */
-            overflow: hidden; /* Evita barras de desplazamiento si crece mucho */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden; /* Evita barras de desplazamiento */
         }
 
-        /* El contenedor del corazón */
-        .heart {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            background-color: #ff4757; /* Color rojo del corazón */
-            
-            /* La animación: nombre | duración | curva de velocidad | infinito */
-            animation: crecer 3s ease-in-out infinite; 
-            
-            /* Sombra para darle un efecto de brillo */
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.8); 
-        }
-
-        /* Pseudo-elementos para crear las partes redondas del corazón */
-        .heart::before,
-        .heart::after {
-            content: "";
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: #ff4757;
-            border-radius: 50%; /* Hace que sean círculos */
-        }
-
-        /* Posicionamos el círculo de arriba */
-        .heart::before {
-            top: -25px;
-            left: 0;
-        }
-
-        /* Posicionamos el círculo de la derecha */
-        .heart::after {
+        /* --- PANTALLA DE INICIO (OVERLAY) --- */
+        #overlay {
+            position: fixed;
             top: 0;
-            left: 25px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
         }
 
-        /* DEFINICIÓN DE LA ANIMACIÓN */
-        @keyframes crecer {
-            0% {
-                /* Empieza invisible y rotado -45 grados (posición estándar del corazón CSS) */
-                transform: scale(0) rotate(-45deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1; /* Aparece rápidamente */
-            }
-            100% {
-                /* Termina 5 veces más grande */
-                transform: scale(5) rotate(-45deg);
-                opacity: 0; /* Se desvanece al final */
-            }
+        #overlay span {
+            color: #fff;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            border: 2px solid #ff0000;
+            padding: 20px;
+            box-shadow: 0 0 15px #ff0000;
+            animation: pulsar 1s infinite;
+            text-align: center;
+        }
+
+        /* --- TEXTO NEÓN ROJO --- */
+        .neon-text {
+            color: #fff;
+            font-size: 4rem;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 20px;
+            /* Efecto Neón Rojo */
+            text-shadow: 
+                0 0 7px #fff,
+                0 0 10px #fff,
+                0 0 21px #fff,
+                0 0 42px #ff0000,
+                0 0 82px #ff0000,
+                0 0 92px #ff0000,
+                0 0 102px #ff0000,
+                0 0 151px #ff0000;
+            animation: parpadeo 1.5s infinite alternate;
+        }
+
+        /* --- ANIMACIÓN DE PUÑOS (FIST BUMP) --- */
+        .fist-bump-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .fist {
+            font-size: 8rem; /* Tamaño de los emojis */
+            position: relative;
+            user-select: none; /* Evita que se seleccione como texto */
+        }
+
+        .bump-effect {
+            font-size: 6rem;
+            position: absolute;
+            opacity: 0;
+            animation: explosion 1s ease-in-out infinite;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Animaciones */
+        .left { animation: golpe-izq 1s ease-in-out infinite; }
+        .right { animation: golpe-der 1s ease-in-out infinite; }
+
+        @keyframes golpe-izq {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+
+        @keyframes golpe-der {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-20px); }
+        }
+
+        @keyframes explosion {
+            0%, 45% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.5); }
+            100% { opacity: 0; transform: scale(2); }
+        }
+
+        @keyframes parpadeo {
+            0% { opacity: 1; text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 42px #ff0000; }
+            50% { opacity: 0.8; text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 20px #ff0000; }
+            100% { opacity: 1; text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 42px #ff0000; }
+        }
+
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Ajuste para celulares */
+        @media (max-width: 600px) {
+            .neon-text { font-size: 2.5rem; }
+            .fist { font-size: 5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="heart"></div>
+    <div id="overlay">
+        <span>Haz clic para iniciar<br>🤜💥🤛</span>
+    </div>
+
+    <audio id="musica" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+        Tu navegador no soporta audio.
+    </audio>
+
+    <div class="container">
+        <h1 class="neon-text">ERES EL MEJOR</h1>
+        
+        <div class="fist-bump-container">
+            <div class="fist left">🤜</div>
+            <div class="bump-effect">💥</div>
+            <div class="fist right">🤛</div>
+        </div>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('overlay');
+        const audio = document.getElementById('musica');
+
+        overlay.addEventListener('click', () => {
+            // Reproducir música
+            audio.volume = 0.5; // Volumen al 50%
+            audio.play().catch(error => {
+                console.log("No se encontró el audio o hubo un error:", error);
+            });
+
+            // Ocultar pantalla de inicio
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 500);
+        });
+    </script>
 
 </body>
 </html>
