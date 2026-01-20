@@ -1,143 +1,197 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Un mensaje para ti</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarjeta Especiale</title>
 
-        body {
-            /* Un fondo oscuro suave (Gris Oscuro Azulado) - Muy elegante */
-            background-color: #1a1a2e;
-            color: #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Montserrat', sans-serif;
-            padding: 20px;
-            text-align: center;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
 
-        /* El contenedor del texto */
-        .message-container {
-            max-width: 600px;
-            min-height: 200px; /* Evita que el texto salte */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+<style>
+:root {
+    --crimson: #dc143c;
+    --crimson-soft: rgba(220, 20, 60, 0.6);
+    --bg-dark: #050505;
+}
 
-        /* Estilo del texto */
-        #typing-text {
-            font-size: 1.8rem;
-            line-height: 1.6;
-            font-weight: 300;
-        }
+body {
+    margin: 0;
+    height: 100svh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #0a0a0a, #000);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
 
-        /* La barrita parpadeante del cursor */
-        .cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1.8rem;
-            background-color: #fff;
-            margin-left: 5px;
-            animation: blink 1s infinite;
-        }
+/* 🌫️ Glow ambiental */
+body::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--crimson-soft), transparent 70%);
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: floatGlow 12s ease-in-out infinite alternate;
+}
 
-        /* Animación de la barrita */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+@keyframes floatGlow {
+    from { transform: translate(-50px, -30px); }
+    to   { transform: translate(50px, 30px); }
+}
 
-        /* Pequeño detalle visual decorativo (una línea sutil) */
-        .decoration-line {
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ff4b5c, transparent);
-            margin-top: 30px;
-            transition: width 2s ease;
-        }
+/* 🎴 Tarjeta */
+.card {
+    background: rgba(5,5,5,0.85);
+    border-radius: 20px;
+    padding: 40px 30px;
+    width: min(90%, 600px);
+    box-shadow:
+        0 0 40px rgba(220,20,60,0.15),
+        inset 0 0 20px rgba(255,255,255,0.03);
+    backdrop-filter: blur(6px);
+    position: relative;
+    z-index: 2;
+}
 
-        /* Para celulares */
-        @media (max-width: 600px) {
-            #typing-text { font-size: 1.4rem; }
-            .cursor { height: 1.4rem; }
-        }
-    </style>
+/* Pantallas */
+.pantalla {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.activa {
+    display: flex;
+}
+
+/* 🔘 Botón */
+.btn-neon {
+    background: transparent;
+    border: 2px solid var(--crimson);
+    color: white;
+    padding: 14px 34px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 0 6px var(--crimson);
+    box-shadow: 0 0 14px var(--crimson-soft);
+    transition: 0.3s;
+}
+
+.btn-neon:hover {
+    background: var(--crimson);
+    box-shadow: 0 0 35px var(--crimson);
+}
+
+/* ✨ Texto neón */
+.Presentacion,
+#typed {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.9rem;
+    line-height: 1.6;
+    color: #fff;
+    text-shadow:
+        0 0 6px var(--crimson),
+        0 0 16px var(--crimson-soft),
+        0 0 32px rgba(220,20,60,0.3);
+    animation: pulse 5s ease-in-out infinite;
+}
+
+/* ❤️ Pulso */
+@keyframes pulse {
+    0%,100% {
+        text-shadow:
+            0 0 6px var(--crimson),
+            0 0 16px var(--crimson-soft),
+            0 0 32px rgba(220,20,60,0.25);
+    }
+    50% {
+        text-shadow:
+            0 0 10px var(--crimson),
+            0 0 22px var(--crimson),
+            0 0 40px rgba(220,20,60,0.4);
+    }
+}
+
+/* ⚡ Flicker */
+.flicker {
+    text-shadow:
+        0 0 4px var(--crimson),
+        0 0 10px var(--crimson-soft),
+        0 0 18px rgba(220,20,60,0.3);
+}
+</style>
 </head>
+
 <body>
 
-    <div class="message-container">
-        <div id="typing-text"></div>
-        <div class="decoration-line" id="line"></div>
+<div class="card">
+    <div id="pantalla1" class="pantalla">
+        <button class="btn-neon" onclick="cambiarPantalla(2)">
+            Abrir carta
+        </button>
     </div>
 
-    <script>
-    const mensajeCompleto =
-        "Hola... ^1000 <br><br> Solo pasaba por aquí para decirte que... ^800 <br> me gusta mucho cuando sonríes. ^1000 <br><br> Que tengas un lindo día. ☺️✨";
+    <div id="pantalla2" class="pantalla">
+        <p class="Presentacion">
+            Este es un mensaje especial para Gaby.
+        </p>
+        <button class="btn-neon" onclick="iniciarMensaje()">
+            Leer mensaje
+        </button>
+    </div>
 
-    const textElement = document.getElementById('typing-text');
-    const lineElement = document.getElementById('line');
+    <div id="pantalla3" class="pantalla">
+        <div id="typed"></div>
+    </div>
+</div>
 
-    let i = 0;
-    let textoVisible = "";
-    let isTag = false;
-    let waitTime = 0;
+<script>
+const textElement = document.getElementById("typed");
 
-    function typeWriter() {
+window.onload = () => {
+    document.getElementById('pantalla1').classList.add('activa');
+};
 
-        if (waitTime > 0) {
-            setTimeout(() => {
-                waitTime = 0;
-                typeWriter();
-            }, waitTime);
-            return;
-        }
+function cambiarPantalla(n) {
+    document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+    document.getElementById('pantalla' + n).classList.add('activa');
+}
 
-        if (i < mensajeCompleto.length) {
-            let char = mensajeCompleto.charAt(i);
+/* ⚡ Flicker aleatorio */
+function flickerEffect() {
+    setTimeout(() => {
+        textElement.classList.add("flicker");
+        setTimeout(() => {
+            textElement.classList.remove("flicker");
+            flickerEffect();
+        }, Math.random() * 120 + 60);
+    }, Math.random() * 5000 + 3000);
+}
 
-            // 🛑 Pausas tipo ^1000
-            if (char === '^') {
-                let numberString = "";
-                i++;
-                while (i < mensajeCompleto.length && !isNaN(mensajeCompleto.charAt(i))) {
-                    numberString += mensajeCompleto.charAt(i);
-                    i++;
-                }
-                waitTime = parseInt(numberString);
-                typeWriter();
-                return;
-            }
+function iniciarMensaje() {
+    cambiarPantalla(3);
 
-            // 🧠 Detectar etiquetas HTML
-            if (char === '<') isTag = true;
-
-            textoVisible += char;
-
-            if (char === '>') isTag = false;
-
-            textElement.innerHTML = textoVisible + '<span class="cursor"></span>';
-            i++;
-
-            let speed = isTag ? 0 : Math.random() * (120 - 50) + 50;
-            setTimeout(typeWriter, speed);
-
-        } else {
-            lineElement.style.width = "100%";
-        }
-    }
-
-    window.onload = () => {
-        setTimeout(typeWriter, 1000);
-    };
+    new Typed('#typed', {
+        strings: [
+            'Solo pasaba por aqui para decirte...^1000',
+            'Eres una chica muy bonita^1000',
+            'Y me encanta cuando sonries^1000',
+            'Espero que tengas un lindo día ☺️✨^1000',
+            '^500'
+        ],
+        typeSpeed: 45,
+        onBegin: flickerEffect
+    });
+}
 </script>
 
 </body>
 </html>
-
