@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarjeta Especiale</title>
+<title>Tarjeta Especial</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
@@ -12,7 +12,6 @@
 :root {
     --crimson: #dc143c;
     --crimson-soft: rgba(220, 20, 60, 0.6);
-    --bg-dark: #050505;
 }
 
 body {
@@ -26,7 +25,7 @@ body {
     overflow: hidden;
 }
 
-/* 🌫️ Glow ambiental */
+/* Glow ambiental */
 body::before {
     content: "";
     position: absolute;
@@ -39,22 +38,18 @@ body::before {
 }
 
 @keyframes floatGlow {
-    from { transform: translate(-50px, -30px); }
-    to   { transform: translate(50px, 30px); }
+    from { transform: translate(-40px, -20px); }
+    to   { transform: translate(40px, 20px); }
 }
 
-/* 🎴 Tarjeta */
+/* Tarjeta */
 .card {
     background: rgba(5,5,5,0.85);
     border-radius: 20px;
     padding: 40px 30px;
     width: min(90%, 600px);
-    box-shadow:
-        0 0 40px rgba(220,20,60,0.15),
-        inset 0 0 20px rgba(255,255,255,0.03);
+    box-shadow: 0 0 40px rgba(220,20,60,0.15);
     backdrop-filter: blur(6px);
-    position: relative;
-    z-index: 2;
 }
 
 /* Pantallas */
@@ -69,20 +64,20 @@ body::before {
     display: flex;
 }
 
-/* 🔘 Botón */
+/* Botón */
 .btn-neon {
     background: transparent;
     border: 2px solid var(--crimson);
     color: white;
     padding: 14px 34px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     border-radius: 12px;
     cursor: pointer;
     letter-spacing: 1px;
     text-transform: uppercase;
     text-shadow: 0 0 6px var(--crimson);
     box-shadow: 0 0 14px var(--crimson-soft);
-    transition: 0.3s;
+    transition: 0.4s;
 }
 
 .btn-neon:hover {
@@ -90,7 +85,7 @@ body::before {
     box-shadow: 0 0 35px var(--crimson);
 }
 
-/* ✨ Texto neón */
+/* Texto */
 .Presentacion,
 #typed {
     font-family: 'Dancing Script', cursive;
@@ -99,33 +94,53 @@ body::before {
     color: #fff;
     text-shadow:
         0 0 6px var(--crimson),
-        0 0 16px var(--crimson-soft),
-        0 0 32px rgba(220,20,60,0.3);
-    animation: pulse 5s ease-in-out infinite;
+        0 0 16px var(--crimson-soft);
 }
 
-/* ❤️ Pulso */
-@keyframes pulse {
-    0%,100% {
-        text-shadow:
-            0 0 6px var(--crimson),
-            0 0 16px var(--crimson-soft),
-            0 0 32px rgba(220,20,60,0.25);
-    }
-    50% {
-        text-shadow:
-            0 0 10px var(--crimson),
-            0 0 22px var(--crimson),
-            0 0 40px rgba(220,20,60,0.4);
-    }
+/* Texto pequeño */
+.texto-pequeno {
+    font-size: 0.65em;
 }
 
-/* ⚡ Flicker */
+/* Flicker */
 .flicker {
     text-shadow:
         0 0 4px var(--crimson),
-        0 0 10px var(--crimson-soft),
-        0 0 18px rgba(220,20,60,0.3);
+        0 0 12px var(--crimson-soft);
+}
+
+/* Texto desapareciendo */
+.fade-out {
+    animation: textFade 1.5s ease forwards;
+}
+
+@keyframes textFade {
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Botón oculto (NO ocupa espacio) */
+.btn-hidden {
+    display: none;
+}
+
+/* Botón visible con animación */
+.btn-show {
+    display: inline-block;
+    animation: fadeUp 1.2s ease forwards;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
 </head>
@@ -133,12 +148,15 @@ body::before {
 <body>
 
 <div class="card">
-    <div id="pantalla1" class="pantalla">
+
+    <!-- Pantalla 1 -->
+    <div id="pantalla1" class="pantalla activa">
         <button class="btn-neon" onclick="cambiarPantalla(2)">
             Abrir carta
         </button>
     </div>
 
+    <!-- Pantalla 2 -->
     <div id="pantalla2" class="pantalla">
         <p class="Presentacion">
             Este es un mensaje especial para Gaby.
@@ -148,48 +166,77 @@ body::before {
         </button>
     </div>
 
+    <!-- Pantalla 3 -->
     <div id="pantalla3" class="pantalla">
         <div id="typed"></div>
+
+        <button id="btnRepetir" class="btn-neon btn-hidden" onclick="repetirMensaje()">
+            Repetir mensaje
+        </button>
     </div>
+
 </div>
 
 <script>
-const textElement = document.getElementById("typed");
-
-window.onload = () => {
-    document.getElementById('pantalla1').classList.add('activa');
-};
+let typedInstance = null;
+const btnRepetir = document.getElementById("btnRepetir");
+const typedEl = document.getElementById("typed");
 
 function cambiarPantalla(n) {
     document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
     document.getElementById('pantalla' + n).classList.add('activa');
 }
 
-/* ⚡ Flicker aleatorio */
-function flickerEffect() {
+function flickerEffect(el) {
     setTimeout(() => {
-        textElement.classList.add("flicker");
+        el.classList.add("flicker");
         setTimeout(() => {
-            textElement.classList.remove("flicker");
-            flickerEffect();
-        }, Math.random() * 120 + 60);
-    }, Math.random() * 5000 + 3000);
+            el.classList.remove("flicker");
+            flickerEffect(el);
+        }, 120);
+    }, 3500);
 }
 
 function iniciarMensaje() {
     cambiarPantalla(3);
 
-    new Typed('#typed', {
+    btnRepetir.className = "btn-neon btn-hidden";
+    typedEl.style.display = "block";
+    typedEl.classList.remove("fade-out");
+    typedEl.innerHTML = "";
+
+    if (typedInstance) {
+        typedInstance.destroy();
+    }
+
+    typedInstance = new Typed('#typed', {
         strings: [
             'Solo pasaba por aqui para decirte...^1000',
-            'Eres una chica muy bonita^1000',
-            'Y me encanta cuando sonries^1000',
-            'Espero que tengas un lindo día ☺️✨^1000',
-            '^500'
+            'El dia de hoy te ves muy bonita 🫣 <br><span class="texto-pequeno">(no importa cuando leas esto)</span>^1000',
+            'Y me encanta cuando sonries😁^1000',
+            'Espero que tengas un lindo día ☺️✨^1000'
         ],
         typeSpeed: 45,
-        onBegin: flickerEffect
+        onBegin: () => flickerEffect(typedEl),
+        onComplete: cierreFinal
     });
+}
+
+function cierreFinal() {
+    setTimeout(() => {
+        typedEl.classList.add("fade-out");
+
+        setTimeout(() => {
+            typedEl.style.display = "none";
+            btnRepetir.classList.remove("btn-hidden");
+            btnRepetir.classList.add("btn-show");
+        }, 1500);
+
+    }, 1000);
+}
+
+function repetirMensaje() {
+    iniciarMensaje();
 }
 </script>
 
